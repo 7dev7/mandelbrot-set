@@ -9,24 +9,25 @@ import (
 )
 
 var (
-	width     int
-	height    int
-	autoScale bool
-	fileName  string
+	cfg *mandelbrot.Config
 )
 
 func init() {
-	flag.IntVar(&width, "width", 1920, "Width of generated image")
-	flag.IntVar(&height, "height", 1080, "Height of generated image")
-	flag.BoolVar(&autoScale, "autoscale", true, "Use auto scale for image")
-	flag.StringVar(&fileName, "file", "example.png", "Output filename of generated image")
+	cfg = &mandelbrot.Config{}
+	flag.IntVar(&cfg.Width, "w", 1920, "width of generated image")
+	flag.IntVar(&cfg.Height, "h", 1080, "height of generated image")
+	flag.Float64Var(&cfg.RePos, "re", -1., "real value")
+	flag.Float64Var(&cfg.ImPos, "im", 0., "imaginary value")
+	flag.Float64Var(&cfg.Radius, "r", 2., "radius")
+	flag.BoolVar(&cfg.AutoScale, "autoscale", true, "Use auto scale for image")
+	flag.StringVar(&cfg.FileName, "file", "example.png", "Output filename of generated image")
 	flag.Parse()
 }
 
 func main() {
-	log.Printf("started generation Mandelbrot set with params: width=%d, height=%d, autoscale=%t, fileName=%s\n", width, height, autoScale, fileName)
-	img := mandelbrot.Create(width, height, autoScale)
-	if file, e := os.Create(fileName); e != nil {
+	log.Printf("started generation Mandelbrot set with cfg: %v\n", cfg)
+	img := mandelbrot.Create(cfg)
+	if file, e := os.Create(cfg.FileName); e != nil {
 		log.Fatalln(e)
 	} else {
 		png.Encode(file, img)
