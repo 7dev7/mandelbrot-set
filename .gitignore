@@ -1,0 +1,11 @@
+.idea/
+
+### Go ###
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+vendor/*/
+bot.json
